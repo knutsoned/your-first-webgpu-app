@@ -9,7 +9,7 @@ pnpm install
 pnpm run dev
 ```
 
-and open a browser to http://localhost:5137
+and open a browser to http://localhost:5173
 
 You can edit src/main.ts in VS Code. You may be prompted to install extensions.
 Install them if you want highlighting for the WGSL code.
