@@ -21,7 +21,7 @@ let step = 0; // Track how many simulation steps have been run
 const gridCount = GRID_SIZE * GRID_SIZE;
 
 // get the canvas element
-const canvas = document.querySelector("canvas");
+const canvas: HTMLCanvasElement = document.querySelector("canvas");
 
 if (canvas) {
   // Your WebGPU code will begin here! (unless it errors out)
@@ -39,7 +39,7 @@ if (canvas) {
   const device: GPUDevice = await adapter.requestDevice();
 
   // get the WebGPU context from the DOM
-  const context = canvas.getContext("webgpu");
+  const context: GPUCanvasContext = canvas.getContext("webgpu");
 
   if (context) {
     // a context is configured to connect this canvas to this device
@@ -88,7 +88,7 @@ if (canvas) {
 
     // describe a grid
     const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE]);
-    const uniformBuffer = device.createBuffer({
+    const uniformBuffer: GPUBuffer = device.createBuffer({
       label: "Grid Uniforms",
       size: uniformArray.byteLength,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
@@ -99,7 +99,7 @@ if (canvas) {
 
     // declare a cell state array and buffer
     const cellStateArray = new Uint32Array(gridCount);
-    const cellStateStorage = [
+    const cellStateStorage: GPUBuffer[] = [
       device.createBuffer({
         label: "Cell State A",
         size: cellStateArray.byteLength,
@@ -188,7 +188,7 @@ if (canvas) {
     });
 
     // Create the bind group layout and pipeline layout.
-    const bindGroupLayout = device.createBindGroupLayout({
+    const bindGroupLayout: GPUBindGroupLayout = device.createBindGroupLayout({
       label: "Cell Bind Group Layout",
       entries: [
         {
@@ -215,7 +215,7 @@ if (canvas) {
       ],
     });
 
-    const pipelineLayout = device.createPipelineLayout({
+    const pipelineLayout: GPUPipelineLayout = device.createPipelineLayout({
       label: "Cell Pipeline Layout",
       bindGroupLayouts: [bindGroupLayout],
     });
@@ -241,7 +241,7 @@ if (canvas) {
     });
 
     // the compute shader actually runs the simulation
-    const simulationShaderModule = device.createShaderModule({
+    const simulationShaderModule: GPUShaderModule = device.createShaderModule({
       label: "Game of Life simulation shader",
       code: /* wgsl */ `
         @group(0) @binding(0) var<uniform> grid: vec2f;
@@ -294,19 +294,21 @@ if (canvas) {
     });
 
     // Create a compute pipeline that updates the game state.
-    const simulationPipeline = device.createComputePipeline({
-      label: "Simulation pipeline",
-      layout: pipelineLayout,
-      compute: {
-        module: simulationShaderModule,
-        entryPoint: "computeMain",
-      },
-    });
+    const simulationPipeline: GPUComputePipeline = device.createComputePipeline(
+      {
+        label: "Simulation pipeline",
+        layout: pipelineLayout,
+        compute: {
+          module: simulationShaderModule,
+          entryPoint: "computeMain",
+        },
+      }
+    );
 
     // declare a bind group
     // since this uses the render pipeline for the layout,
     // the render pipeline has to be declared first
-    const bindGroup = device.createBindGroup({
+    const bindGroup: GPUBindGroup = device.createBindGroup({
       label: "Cell renderer bind group",
       layout: cellPipeline.getBindGroupLayout(0),
       entries: [
@@ -324,7 +326,7 @@ if (canvas) {
         },
       ],
     });
-    const bindGroups = [
+    const bindGroups: GPUBindGroup[] = [
       bindGroup,
       device.createBindGroup({
         label: "Cell renderer bind group",
@@ -352,7 +354,7 @@ if (canvas) {
       const encoder: GPUCommandEncoder = device.createCommandEncoder();
 
       // run the compute shader
-      const computePass = encoder.beginComputePass();
+      const computePass: GPUComputePassEncoder = encoder.beginComputePass();
       computePass.setPipeline(simulationPipeline);
       computePass.setBindGroup(0, bindGroups[step % 2]);
 
@@ -401,7 +403,6 @@ if (canvas) {
 
       // all together now
       device.queue.submit([encoder.finish()]);
-
       console.log("holy shit");
     }
 
@@ -409,5 +410,4 @@ if (canvas) {
     setInterval(updateGrid, UPDATE_INTERVAL);
   }
 }
-
 console.log("where's the tylenol");
