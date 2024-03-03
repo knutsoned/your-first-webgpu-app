@@ -9,10 +9,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@spissvinkel/alea": "^1.2.1",
     "typescript": "^5.2.2",
     "vite": "^5.1.4"
-  },
-  "dependencies": {
-    "@spissvinkel/alea": "^1.2.1"
   }
 }
