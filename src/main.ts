@@ -262,6 +262,19 @@ if (canvas) {
           return cellStateIn[cellIndex(vec2(x, y))];
         }
 
+        // a workgroup is a matrix of related operations
+        // in this case, it is a 2D space of cells to de/activate
+        // https://surma.dev/things/webgpu/
+
+        // the global_invocation_id is a position within the group of cells
+        // but assume this relates to what happens when dispatchWorkgroups runs
+
+        // if we decided to just run (WORKGROUP_SIZE * WORKGROUP_SIZE, 1)
+        // that would have the same effect except we'd need to div and mod
+        // the single dimension index to get the grid position
+
+        // so it's convenient that we are actually working with a 2D grid here
+        // but it's not like it has to be a grid and not a line or a cube
         @compute
         @workgroup_size(${WORKGROUP_SIZE}, ${WORKGROUP_SIZE})
         fn computeMain(@builtin(global_invocation_id) cell: vec3u) {
@@ -403,11 +416,13 @@ if (canvas) {
 
       // all together now
       device.queue.submit([encoder.finish()]);
-      console.log("holy shit");
+
+      //console.log("holy shit");
     }
 
     // now run it
     setInterval(updateGrid, UPDATE_INTERVAL);
   }
 }
-console.log("where's the tylenol");
+
+//console.log("where's the tylenol");
