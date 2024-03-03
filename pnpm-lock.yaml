@@ -4,12 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-dependencies:
+devDependencies:
   '@spissvinkel/alea':
     specifier: ^1.2.1
     version: 1.2.1
-
-devDependencies:
   typescript:
     specifier: ^5.2.2
     version: 5.3.3
@@ -332,7 +330,7 @@ packages:
 
   /@spissvinkel/alea@1.2.1:
     resolution: {integrity: sha512-PIwf64IaumvEld5+tyeeHELt1MKfZ0GNRqLl9D07eEJjksOaN7S2zqQriqFfKDys6ZrmLhWk9T6bW9YzkDopkg==}
-    dev: false
+    dev: true
 
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
